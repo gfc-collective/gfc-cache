@@ -1,7 +1,5 @@
 package com.gilt.gfc.cache
 
-import com.google.common.base.Optional
-
 /**
   * An synchronous cache.
   *
@@ -13,6 +11,8 @@ import com.google.common.base.Optional
   * @since 28/Jul/2014 15:58
   */
 trait SyncCache[K, V] extends CacheBase with SyncCacheEventNotifier[K, V] {
+  import com.gilt.gfc.guava.GuavaConverters._
+  import com.google.common.base.Optional
 
   /**
     * Try to load a value from the cache with the given key.
