@@ -1,16 +1,15 @@
 package com.gilt.gfc.cache
 
 import java.util.concurrent.{ConcurrentHashMap, CopyOnWriteArrayList}
-
-import com.gilt.gfc.guava.cache.CacheInitializationStrategy
-import com.gilt.gfc.time.Timer
-import com.gilt.gfc.util.Throwables
-
 import scala.collection.JavaConverters._
 import scala.collection.concurrent
 import scala.concurrent.Future
 import scala.util.control.NonFatal
-import scala.util.{Failure, Success, Try}
+import scala.util.{Success, Failure, Try}
+
+import com.gilt.gfc.guava.cache.CacheInitializationStrategy
+import com.gilt.gfc.time.Timer
+import com.gilt.gfc.util.Throwables
 
 /**
  *
@@ -136,6 +135,7 @@ private[cache] trait DerivedAsyncCacheBase[K, V, L, W] extends AsyncCache[L, W] 
       if (!registered && parent != null) {
         parent.registerHandler(this)
         if (parent.isStarted) {
+          import com.gilt.gfc.concurrent.ScalaFutures.Implicits.sameThreadExecutionContext
 
           info(s"Bootstrapping derived cache from parent $parent")
           val bootstrap: Future[Unit] = Future.sequence(parent.asMap.map {
@@ -331,6 +331,7 @@ trait ValueDerivedAsyncCacheImpl[K, V, W] extends DerivedAsyncCacheImpl[K, V, K,
   override def transformSourceObject(k: K, v: V): Iterable[(K, W)] = transformValue(k, v).fold(Iterable.empty[(K, W)])(w => Iterable(k -> w))
 
   override def onCacheMiss(k: K): Future[Option[W]] = {
+    import com.gilt.gfc.concurrent.ScalaFutures.Implicits.sameThreadExecutionContext
     parent.get(k).map(_.flatMap(transformValue(k, _)))
   }
 }
@@ -344,6 +345,7 @@ trait ValueDerivedAsyncCacheImpl[K, V, W] extends DerivedAsyncCacheImpl[K, V, K,
   */
 trait ValueDerivedAsyncCacheWithAsyncTransformImpl[K, V, W] extends DerivedAsyncCacheWithAsyncTransformImpl[K, V, K, W] {
   override def onCacheMiss(k: K): Future[Option[W]] = {
+    import com.gilt.gfc.concurrent.ScalaFutures.Implicits.sameThreadExecutionContext
     for {
       v <- parent.get(k)
       w <- v.fold(Future.successful(Iterable.empty[(K, W)]))(transformSourceObject(k, _))

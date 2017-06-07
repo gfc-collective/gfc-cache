@@ -1,14 +1,18 @@
 package com.gilt.gfc.cache
 
-import org.scalatest.concurrent.Eventually
+import com.gilt.gfc.guava.cache.CacheInitializationStrategy
+import com.google.common.collect.{HashBiMap, BiMap}
+import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures._
+import org.scalatest.concurrent.Eventually
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{FunSpec, Matchers}
-
+import scala.collection.JavaConverters._
 import scala.concurrent.Future
 import scala.language.reflectiveCalls
 
 class DerivedAsyncCacheSpec extends FunSpec with Matchers with MockitoSugar with Eventually {
+  import FutureHelpers._
 
   describe("An AsyncCacheEventNotifierImpl") {
     def createFixture = new {

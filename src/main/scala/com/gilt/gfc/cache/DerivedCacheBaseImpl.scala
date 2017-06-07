@@ -2,7 +2,7 @@ package com.gilt.gfc.cache
 
 import com.gilt.gfc.logging.Loggable
 
-private[cache] trait DerivedCacheBaseImpl extends CacheBase with FutureTiming with Loggable {
+private[cache] trait DerivedCacheBaseImpl extends CacheBase with Loggable {
   def parent: CacheBase
 
   override def start() = {

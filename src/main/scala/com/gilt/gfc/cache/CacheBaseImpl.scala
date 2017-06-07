@@ -1,36 +1,39 @@
 package com.gilt.gfc.cache
 
-import java.util.concurrent.{ScheduledFuture, TimeUnit}
+import java.util.concurrent.{Executors, ScheduledFuture, TimeUnit}
 
+import com.gilt.gfc.concurrent.AsyncScheduledExecutorService
+import com.gilt.gfc.concurrent.JavaConverters._
 import com.gilt.gfc.guava.cache.CacheInitializationStrategy
 import com.gilt.gfc.logging.Loggable
 import com.gilt.gfc.time.Timer
+
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 /**
- * Cache Base Implementation that requires the implementation of a function to partially re-load the cached data
- * (e.g. by issuing a remote call). This function is periodically called to refresh the cache.
- *
- * @author Gregor Heine
- * @since 30/Jul/2014 14:07
- */
+  * Cache Base Implementation that requires the implementation of a function to partially re-load the cached data
+  * (e.g. by issuing a remote call). This function is periodically called to refresh the cache.
+  *
+  * @author Gregor Heine
+  * @since 30/Jul/2014 14:07
+  */
 private[cache] object CacheBaseImpl {
-  val defaultExecutor = SharedExecutor.scheduledExecutor
+  val defaultExecutor = Executors.newSingleThreadScheduledExecutor().asScala
   val defaultContext = ExecutionContext.fromExecutor(defaultExecutor)
 }
 
-private[cache] trait CacheBaseImpl[K, V] extends CacheBase with FutureTiming with Loggable {
+private[cache] trait CacheBaseImpl[K, V] extends CacheBase with Loggable {
   self: CacheConfiguration =>
 
   @volatile
   private var future: Option[ScheduledFuture[_]] = None
 
   /**
-   * The source data that will be used to build all views
-   * @return an iterator of key-value pairs that will be used to build all cached views
-   */
+    * The source data that will be used to build all views
+    * @return an iterator of key-value pairs that will be used to build all cached views
+    */
   def getSourceObjects: Future[Iterable[(K, V)]]
 
   protected def buildCache(kvs: Iterable[(K, V)]): Unit

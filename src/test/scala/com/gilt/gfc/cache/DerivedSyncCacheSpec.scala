@@ -2,15 +2,18 @@ package com.gilt.gfc.cache
 
 import java.util.concurrent.ConcurrentHashMap
 
+import com.gilt.gfc.guava.cache.CacheInitializationStrategy
+import com.google.common.base.Optional
+import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{FunSpec, Matchers}
-
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
 import scala.language.reflectiveCalls
 
 
 class DerivedSyncCacheSpec extends FunSpec with Matchers with MockitoSugar {
+  import FutureHelpers._
 
   describe("A SyncCacheEventNotifierImpl") {
     def createFixture = new {
