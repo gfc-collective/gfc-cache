@@ -2,7 +2,7 @@ lazy val commonSettings = Seq(
   organization := "com.gilt",
   name := "gfc-cache",
   scalaVersion := "2.11.11",
-  crossScalaVersions := Seq(scalaVersion.value, "2.10.6"),
+  crossScalaVersions := Seq(scalaVersion.value, "2.10.6", "2.12.2"),
   scalacOptions += "-target:jvm-1.7",
   javacOptions ++= Seq("-source", "1.7", "-target", "1.7")
 )
@@ -12,9 +12,8 @@ lazy val root = (project in file("."))
   .settings(releaseSettings: _*)
   .settings(
     libraryDependencies ++= Seq(
-      "com.gilt" %% "gfc-time" % "0.0.5",
-      "com.gilt" %% "gfc-concurrent" % "0.3.3",
-      "com.gilt" %% "gfc-concurrent" % "0.3.3",
+      "com.gilt" %% "gfc-time" % "0.0.7",
+      "com.gilt" %% "gfc-concurrent" % "0.3.5",
       "com.gilt" %% "gfc-logging" % "0.0.7",
       "com.gilt" %% "gfc-util" % "0.1.7",
       "com.gilt" %% "gfc-guava" % "0.2.5",
