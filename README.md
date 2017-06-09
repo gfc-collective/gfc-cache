@@ -4,7 +4,7 @@ A library that contains scala caching helper code. Part of the [Gilt Foundation 
 
 ## Getting gfc-cache
 
-The latest version is 0.0.1, which is cross-built against Scala 2.10.x, 2.11.x and 2.12.x.
+The latest version is 0.0.3, which is cross-built against Scala 2.10.x, 2.11.x and 2.12.x.
 
 If you're using SBT, add the following line to your build file:
 
