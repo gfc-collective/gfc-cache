@@ -137,6 +137,23 @@ class DerivedAsyncCacheSpec extends FunSpec with Matchers with MockitoSugar with
       ex.getMessage shouldBe "You must explicitly register the derived cache before use. Please call .register() as part of attaching the cache to it's parent."
     }
 
+    it("should bootstrap derived cache from parent") {
+      val parentCache = createFixture.testCache
+
+      parentCache.start()
+
+      val derivedAsyncCache: DerivedAsyncCacheBase[Int, String, String, Int] = new DerivedAsyncCacheImpl[Int, String, String, Int] {
+        override val parent: AsyncCache[Int, String] = parentCache
+        override def transformSourceObject(k: Int, v: String) = Seq((v, k))
+        override def onCacheMiss(k: String) = Future.successful(None)
+      }
+
+      derivedAsyncCache.register()
+      derivedAsyncCache.isStarted shouldBe true
+
+      derivedAsyncCache.asMap should not be Map.empty
+    }
+
     it("should transform started cache") {
       val f = createFixture
       f.testCache.start()
