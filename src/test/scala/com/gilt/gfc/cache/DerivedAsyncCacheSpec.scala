@@ -24,8 +24,6 @@ class DerivedAsyncCacheSpec extends FunSpec with Matchers with MockitoSugar with
       val mockHandler = mock[AsyncCacheEventHandler[String, Int]]
     }
 
-
-
     it("should notify registered handler for cache reload") {
       val f = createFixture
       f.testNotifier.registerHandler(f.mockHandler)
@@ -152,6 +150,28 @@ class DerivedAsyncCacheSpec extends FunSpec with Matchers with MockitoSugar with
       derivedAsyncCache.isStarted shouldBe true
 
       derivedAsyncCache.asMap should not be Map.empty
+    }
+
+    it("should transform source object") {
+      val f = createFixture
+
+      f.testCache.start()
+
+      val derivedAsyncCacheWATI = new DerivedAsyncCacheWithAsyncTransformImpl[Int, String, String, Int] {
+        override val parent: AsyncCache[Int, String] = f.testCache
+        override def transformSourceObjects(kvs: Iterable[(Int, String)]): Future[Iterable[(String, Int)]]
+            = Future.successful(kvs.map{x:(Int, String) => (x._2, x._1)})
+        override def onCacheMiss(k: String) = Future.successful(None)
+      }
+
+      derivedAsyncCacheWATI.register()
+
+      f.sourceObjects.put(f.testKey2, f.testValue2)
+      derivedAsyncCacheWATI.parent.get(f.testKey2)
+
+      Thread.sleep(2000) 
+
+      derivedAsyncCacheWATI.get(f.testValue2).await shouldBe Some(f.testKey2)
     }
 
     it("should transform started cache") {
