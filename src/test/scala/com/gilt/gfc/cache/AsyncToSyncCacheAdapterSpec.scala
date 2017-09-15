@@ -95,4 +95,121 @@ class AsyncToSyncCacheAdapterSpec extends FunSpec with Matchers with MockitoSuga
       f.syncView.asMap should be(Map(f.testKey -> f.testValue, f.testKey3 -> f.testValue3))
     }
   }
+
+  describe("test AsyncToSyncCacheAdapter") {
+    def createFixture = new {
+      val testValue = "one"
+      val testKey = 1
+      val testValue2 = "two"
+      val testKey2 = 2
+      val sourceObjects = new ConcurrentHashMap[Int, String]().asScala
+      sourceObjects.put(testKey, testValue)
+
+      val testCache  = new AsyncCacheImpl[Int, String] with CacheConfiguration {
+        override def getSourceObject(key: Int): Future[Option[String]] = Future.successful(sourceObjects.get(key))
+        override def refreshPeriodMs: Long = 1000L
+        override def cacheInitStrategy: CacheInitializationStrategy = CacheInitializationStrategy.SYNC
+        override def getSourceObjects: Future[Iterable[(Int, String)]] = Future.successful(sourceObjects.toList)
+      }
+
+      val transformedCache = new AsyncToSyncCacheAdapter[Int, String] {
+        override def parent: AsyncCache[Int, String] = testCache
+      }
+    }
+
+    it("should not allow access to non started parent cache") {
+      val f = createFixture
+
+      f.transformedCache.isStarted shouldBe false
+      f.transformedCache.asMap shouldBe Map.empty
+
+      val ex = the[RuntimeException] thrownBy {
+        f.transformedCache.get(f.testKey)
+      }
+      ex.getMessage shouldBe "You must explicitly start the cache before use. Please call .start() as part of your application's startup sequence."
+    }
+
+    it("should not allow access to non registered derived cache") {
+      val f = createFixture
+      f.testCache.start()
+
+      val transformedCache: SyncCache[Int, String] = new AsyncToSyncCacheAdapter[Int, String] {
+        override val parent: AsyncCache[Int, String] = f.testCache
+      }
+
+      transformedCache.isStarted shouldBe true
+      transformedCache.asMap shouldBe Map.empty
+
+      val ex = the[RuntimeException] thrownBy {
+        transformedCache.get(f.testKey)
+      }
+      ex.getMessage shouldBe "You must explicitly register the derived cache before use. Please call .register() as part of attaching the cache to it's parent."
+    }
+
+    it("should transform cache on start") {
+      val f = createFixture
+      f.testCache.start()
+
+      f.transformedCache.isStarted shouldBe true
+      f.transformedCache.asMap should be(Map(f.testKey -> f.testValue))
+      f.transformedCache.get(f.testKey) shouldBe Some(f.testValue)
+      f.transformedCache.getOpt(f.testKey) shouldBe Optional.of(f.testValue)
+
+      f.transformedCache.get(3) shouldBe None
+      f.transformedCache.getOpt(3) shouldBe Optional.absent()
+    }
+
+    it("should transform already started cache") {
+      val f = createFixture
+      f.testCache.start()
+
+      val transformedCache: SyncCache[Int, String] = new AsyncToSyncCacheAdapter[Int, String] {
+        override def parent: AsyncCache[Int, String] = f.testCache
+      }
+
+      transformedCache.isStarted shouldBe true
+      transformedCache.asMap should be(Map(f.testKey -> f.testValue))
+      transformedCache.get(f.testKey) shouldBe Some(f.testValue)
+      transformedCache.getOpt(f.testKey) shouldBe Optional.of(f.testValue)
+
+      transformedCache.get(3) shouldBe None
+      transformedCache.getOpt(3) shouldBe Optional.absent()
+    }
+
+    it("should reload when the parent cache is reloaded") {
+      val f = createFixture
+      f.testCache.start()
+
+      f.sourceObjects.put(f.testKey2, f.testValue2)
+      f.testCache.reload().await
+
+      f.transformedCache.asMap should be(Map(f.testKey -> f.testValue, f.testKey2 -> f.testValue2))
+    }
+
+    it("should propagate parent cache loads to child cache") {
+      val f = createFixture
+      f.testCache.start()
+
+      f.transformedCache.get(f.testKey2) shouldBe None
+      f.testCache.get(f.testKey2).await shouldBe None
+
+      f.testCache.reload().await
+      f.sourceObjects.put(f.testKey2, f.testValue2)
+
+      f.transformedCache.get(f.testKey2) shouldBe None
+      f.testCache.get(f.testKey2).await shouldBe Some(f.testValue2)
+      f.transformedCache.get(f.testKey2) shouldBe Some(f.testValue2)
+    }
+
+    it("should only replace cache entry when it previously had a miss") {
+      val f = createFixture
+      f.testCache.start()
+
+      f.transformedCache.get(f.testKey2) shouldBe None
+      f.transformedCache.onCacheMissLoad(f.testKey2, f.testValue2)
+      f.transformedCache.get(f.testKey2) shouldBe Some(f.testValue2)
+      f.transformedCache.onCacheMissLoad(f.testKey2, "invalid")
+      f.transformedCache.get(f.testKey2) shouldBe Some(f.testValue2)
+    }
+  }
 }
