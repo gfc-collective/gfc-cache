@@ -124,7 +124,7 @@ class DerivedAsyncCacheSpec extends FunSpec with Matchers with MockitoSugar with
 
       val transformedCache: AsyncCache[String, Int] = new DerivedAsyncCacheImpl[Int, String, String, Int] {
         override val parent: AsyncCache[Int, String] = f.testCache
-        override def transformSourceObject(k: Int, v: String) = Iterable.empty
+        override def transformSourceObject(k: Int, v: String) = Iterable[(String, Int)](v -> k)
         override def onCacheMiss(k: String) = Future.successful(None)
       }
 

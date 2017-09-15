@@ -143,7 +143,7 @@ class DerivedSyncCacheSpec extends FunSpec with Matchers with MockitoSugar {
       ex.getMessage shouldBe "You must explicitly register the derived cache before use. Please call .register() as part of attaching the cache to it's parent."
     }
 
-    it("should transform started cache") {
+    it("should transform cache on start") {
       val f = createFixture
       f.testCache.start()
 
@@ -154,6 +154,24 @@ class DerivedSyncCacheSpec extends FunSpec with Matchers with MockitoSugar {
 
       f.transformedCache.get("nonExistingKey") shouldBe None
       f.transformedCache.getOpt("nonExistingKey") shouldBe Optional.absent()
+    }
+
+    it("should transform already started cache") {
+      val f = createFixture
+      f.testCache.start()
+
+      val transformedCache: SyncCache[String, Int] = new DerivedSyncCacheImpl[Int, String, String, Int] {
+        override def parent: SyncCache[Int, String] = f.testCache
+        override def transformSourceObject(k: Int, v: String): Iterable[(String, Int)] = Iterable[(String, Int)](v -> k)
+      }
+
+      transformedCache.isStarted shouldBe true
+      transformedCache.asMap should be(Map(f.transformedKey -> f.transformedValue))
+      transformedCache.get(f.transformedKey) shouldBe Some(f.transformedValue)
+      transformedCache.getOpt(f.transformedKey) shouldBe Optional.of(f.transformedValue)
+
+      transformedCache.get("nonExistingKey") shouldBe None
+      transformedCache.getOpt("nonExistingKey") shouldBe Optional.absent()
     }
 
     it("should transform transformed cache") {
