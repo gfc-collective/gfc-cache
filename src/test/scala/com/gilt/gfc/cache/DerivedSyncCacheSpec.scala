@@ -82,7 +82,7 @@ class DerivedSyncCacheSpec extends FunSpec with Matchers with MockitoSugar {
 
   }
 
-  describe("A sync cache transformer"){
+  describe("test DerivedSyncCacheImpl"){
     def createFixture = new {
       val testValue = "one"
       val testKey = 1
@@ -197,6 +197,122 @@ class DerivedSyncCacheSpec extends FunSpec with Matchers with MockitoSugar {
 
       f.transformedCache.asMap should be(Map(f.transformedKey -> f.transformedValue, f.transformedKey2 -> f.transformedValue2))
       f.transformedTwiceCache.asMap should be(Map(f.transformedKey -> f.transformedValue.toString, f.transformedKey2 -> f.transformedValue2.toString))
+    }
+  }
+
+  describe("test ValueDerivedSyncCacheImpl"){
+    def createFixture = new {
+      val testValue = "one"
+      val testKey = 1
+      val testValue2 = "two"
+      val testKey2 = 2
+      val sourceObjects = new ConcurrentHashMap[Int, String]().asScala
+      sourceObjects.put(testKey, testValue)
+
+      val testCache = new SyncCacheImpl[Int, String]  with CacheConfiguration {
+        override def refreshPeriodMs: Long = 1000L
+        override def cacheInitStrategy: CacheInitializationStrategy = CacheInitializationStrategy.SYNC
+        override def getSourceObjects: Future[Iterable[(Int, String)]] = Future.successful(sourceObjects)
+      }
+
+      val transformedValue = testValue.length
+      val transformedValue2 = testValue2.length
+
+      val transformedCache: SyncCache[Int, Int] = new ValueDerivedSyncCacheImpl[Int, String, Int] {
+        override def parent: SyncCache[Int, String] = testCache
+        override def transformValue(k: Int, v: String): Option[Int] = Some(v.length)
+      }
+
+      val transformedTwiceCache: SyncCache[Int, String] = new ValueDerivedSyncCacheImpl[Int, Int, String] {
+        override def parent: SyncCache[Int, Int] = transformedCache
+        override def transformValue(k: Int, v: Int): Option[String] = Some(v.toString)
+      }
+    }
+
+    it("should not allow access to non started parent cache") {
+      val f = createFixture
+
+      f.transformedCache.isStarted shouldBe false
+      f.transformedCache.asMap shouldBe Map.empty
+
+      val ex = the[RuntimeException] thrownBy {
+        f.transformedCache.get(f.testKey)
+      }
+      ex.getMessage shouldBe "You must explicitly start the cache before use. Please call .start() as part of your application's startup sequence."
+    }
+
+    it("should not allow access to non registered derived cache") {
+      val f = createFixture
+      f.testCache.start()
+
+      val transformedCache: SyncCache[Int, Int] = new ValueDerivedSyncCacheImpl[Int, String, Int] {
+        override val parent: SyncCache[Int, String] = f.testCache
+        override def transformValue(k: Int, v: String): Option[Int] = Some(v.length)
+      }
+
+      transformedCache.isStarted shouldBe true
+      transformedCache.asMap shouldBe Map.empty
+
+      val ex = the[RuntimeException] thrownBy {
+        transformedCache.get(f.testKey)
+      }
+      ex.getMessage shouldBe "You must explicitly register the derived cache before use. Please call .register() as part of attaching the cache to it's parent."
+    }
+
+    it("should transform cache on start") {
+      val f = createFixture
+      f.testCache.start()
+
+      f.transformedCache.isStarted shouldBe true
+      f.transformedCache.asMap should be(Map(f.testKey -> f.transformedValue))
+      f.transformedCache.get(f.testKey) shouldBe Some(f.transformedValue)
+      f.transformedCache.getOpt(f.testKey) shouldBe Optional.of(f.transformedValue)
+
+      f.transformedCache.get(3) shouldBe None
+      f.transformedCache.getOpt(3) shouldBe Optional.absent()
+    }
+
+    it("should transform already started cache") {
+      val f = createFixture
+      f.testCache.start()
+
+      val transformedCache: SyncCache[Int, Int] = new ValueDerivedSyncCacheImpl[Int, String, Int] {
+        override def parent: SyncCache[Int, String] = f.testCache
+        override def transformValue(k: Int, v: String): Option[Int] = Some(v.length)
+      }
+
+      transformedCache.isStarted shouldBe true
+      transformedCache.asMap should be(Map(f.testKey -> f.transformedValue))
+      transformedCache.get(f.testKey) shouldBe Some(f.transformedValue)
+      transformedCache.getOpt(f.testKey) shouldBe Optional.of(f.transformedValue)
+
+      transformedCache.get(3) shouldBe None
+      transformedCache.getOpt(3) shouldBe Optional.absent()
+    }
+
+    it("should transform transformed cache") {
+      val f = createFixture
+      f.testCache.start()
+
+      f.transformedTwiceCache.isStarted shouldBe true
+
+      f.transformedTwiceCache.asMap should be(Map(f.testKey -> f.transformedValue.toString))
+      f.transformedTwiceCache.get(f.testKey) shouldBe Some(f.transformedValue.toString)
+      f.transformedTwiceCache.getOpt(f.testKey) shouldBe Optional.of(f.transformedValue.toString)
+
+      f.transformedTwiceCache.get(3) shouldBe None
+      f.transformedTwiceCache.getOpt(3) shouldBe Optional.absent()
+    }
+
+    it("should reload when the parent cache is reloaded") {
+      val f = createFixture
+      f.testCache.start()
+
+      f.sourceObjects.put(f.testKey2, f.testValue2)
+      f.testCache.reload().await
+
+      f.transformedCache.asMap should be(Map(f.testKey -> f.transformedValue, f.testKey2 -> f.transformedValue2))
+      f.transformedTwiceCache.asMap should be(Map(f.testKey -> f.transformedValue.toString, f.testKey2 -> f.transformedValue2.toString))
     }
   }
 }
