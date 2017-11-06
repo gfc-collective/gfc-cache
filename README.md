@@ -9,7 +9,7 @@ The latest version is 0.0.3, which is cross-built against Scala 2.10.x, 2.11.x a
 If you're using SBT, add the following line to your build file:
 
 ```scala
-libraryDependencies += "com.gilt" %% "gfc-cache" % "0.0.1"
+libraryDependencies += "com.gilt" %% "gfc-cache" % "0.0.3"
 ```
 
 For Maven and other build tools, you can visit [search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Ccom.gilt%20gfc).
