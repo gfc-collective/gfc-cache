@@ -198,6 +198,7 @@ class AsyncToSyncCacheAdapterSpec extends FunSpec with Matchers with MockitoSuga
 
       f.transformedCache.get(f.testKey2) shouldBe None
       f.testCache.get(f.testKey2).await shouldBe Some(f.testValue2)
+      Thread.sleep(200)
       f.transformedCache.get(f.testKey2) shouldBe Some(f.testValue2)
     }
 
