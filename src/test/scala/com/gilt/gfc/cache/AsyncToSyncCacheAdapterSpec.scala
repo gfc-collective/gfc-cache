@@ -1,7 +1,7 @@
 package com.gilt.gfc.cache
 
 import java.util.concurrent.ConcurrentHashMap
-
+import scala.concurrent.duration.{Duration, SECONDS}
 import com.gilt.gfc.guava.cache.CacheInitializationStrategy
 import com.google.common.base.Optional
 import org.scalatest.concurrent.Eventually
@@ -14,9 +14,8 @@ import scala.language.reflectiveCalls
 
 class AsyncToSyncCacheAdapterSpec extends FunSpec with Matchers with MockitoSugar with Eventually {
   import FutureHelpers._
-  import scala.concurrent.duration._
 
-  override implicit val patienceConfig = PatienceConfig(timeout = scaled(1 second))
+  override implicit val patienceConfig = PatienceConfig(timeout = scaled(Duration(1, SECONDS)))
 
   describe("A sync cache view") {
     def createFixture = new {
