@@ -14,6 +14,9 @@ import scala.language.reflectiveCalls
 
 class AsyncToSyncCacheAdapterSpec extends FunSpec with Matchers with MockitoSugar with Eventually {
   import FutureHelpers._
+  import scala.concurrent.duration._
+
+  override implicit val patienceConfig = PatienceConfig(timeout = scaled(1 second))
 
   describe("A sync cache view") {
     def createFixture = new {
@@ -198,8 +201,7 @@ class AsyncToSyncCacheAdapterSpec extends FunSpec with Matchers with MockitoSuga
 
       f.transformedCache.get(f.testKey2) shouldBe None
       f.testCache.get(f.testKey2).await shouldBe Some(f.testValue2)
-      Thread.sleep(200)
-      f.transformedCache.get(f.testKey2) shouldBe Some(f.testValue2)
+      eventually(f.transformedCache.get(f.testKey2) shouldBe Some(f.testValue2))
     }
 
     it("should only replace cache entry when it previously had a miss") {
