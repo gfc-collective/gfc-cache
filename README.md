@@ -43,6 +43,6 @@ Mix in this trait to provide configuration for the cache. The following paramete
 
 
 ## License
-Copyright 2017 Gilt Groupe, Inc. &  HBC Digital.
+Copyright 2018 Gilt Groupe, Inc. &  HBC Digital.
 
 Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
