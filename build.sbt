@@ -17,7 +17,7 @@ libraryDependencies ++= Seq(
   "com.gilt" %% "gfc-util" % "0.1.7",
   "com.gilt" %% "gfc-guava" % "0.3.0",
   "org.scalatest" %% "scalatest" % "3.0.5" % Test,
-  "org.mockito" % "mockito-all" % "1.10.19" % Test
+  "org.mockito" % "mockito-core" % "2.18.3" % Test
 )
 
 
