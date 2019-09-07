@@ -12,7 +12,7 @@ javacOptions ++= Seq("-source", "1.7", "-target", "1.7")
 
 libraryDependencies ++= Seq(
   "com.gilt" %% "gfc-time" % "0.0.7",
-  "com.gilt" %% "gfc-concurrent" % "0.3.7",
+  "com.gilt" %% "gfc-concurrent" % "0.3.8",
   "com.gilt" %% "gfc-logging" % "0.0.8",
   "com.gilt" %% "gfc-util" % "0.2.2",
   "com.gilt" %% "gfc-guava" % "0.3.0",
