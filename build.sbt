@@ -6,9 +6,9 @@ scalaVersion := "2.12.8"
 
 crossScalaVersions := Seq(scalaVersion.value, "2.11.12")
 
-scalacOptions += "-target:jvm-1.7"
+scalacOptions += "-target:jvm-1.8"
 
-javacOptions ++= Seq("-source", "1.7", "-target", "1.7")
+javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
 
 libraryDependencies ++= Seq(
   "com.gilt" %% "gfc-time" % "0.0.7",
