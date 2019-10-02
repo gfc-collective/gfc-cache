@@ -39,13 +39,13 @@ publishArtifact in Test := false
 
 pomIncludeRepository := { _ => false }
 
-licenses := Seq("Apache-style" -> url("https://raw.githubusercontent.com/gilt/gfc-cache/master/LICENSE"))
+licenses := Seq("Apache-style" -> url("https://raw.githubusercontent.com/gfc-collective/gfc-cache/master/LICENSE"))
 
-homepage := Some(url("https://github.com/gilt/gfc-cache"))
+homepage := Some(url("https://github.com/gfc-collective/gfc-cache"))
 
 pomExtra := <scm>
-  <url>https://github.com/gilt/gfc-cache.git</url>
-  <connection>scm:git:git@github.com:gilt/gfc-cache.git</connection>
+  <url>https://github.com/gfc-collective/gfc-cache.git</url>
+  <connection>scm:git:git@github.com:gfc-collective/gfc-cache.git</connection>
 </scm>
   <developers>
     <developer>
