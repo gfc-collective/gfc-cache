@@ -5,14 +5,15 @@ import java.util.concurrent.ConcurrentHashMap
 import com.gilt.gfc.guava.cache.CacheInitializationStrategy
 import com.google.common.base.Optional
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
-import org.scalatest.{FunSpec, Matchers}
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
 import scala.language.reflectiveCalls
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatest.funspec.AnyFunSpec
+import org.scalatest.matchers.should.Matchers
 
 
-class DerivedSyncCacheSpec extends FunSpec with Matchers with MockitoSugar {
+class DerivedSyncCacheSpec extends AnyFunSpec with Matchers with MockitoSugar {
   import FutureHelpers._
 
   describe("A SyncCacheEventNotifierImpl") {

@@ -5,14 +5,15 @@ import scala.concurrent.duration.{Duration, SECONDS}
 import com.gilt.gfc.guava.cache.CacheInitializationStrategy
 import com.google.common.base.Optional
 import org.scalatest.concurrent.Eventually
-import org.scalatest.mockito.MockitoSugar
-import org.scalatest.{FunSpec, Matchers}
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
 import scala.language.reflectiveCalls
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatest.funspec.AnyFunSpec
+import org.scalatest.matchers.should.Matchers
 
 
-class AsyncToSyncCacheAdapterSpec extends FunSpec with Matchers with MockitoSugar with Eventually {
+class AsyncToSyncCacheAdapterSpec extends AnyFunSpec with Matchers with MockitoSugar with Eventually {
   import FutureHelpers._
 
   override implicit val patienceConfig = PatienceConfig(timeout = scaled(Duration(1, SECONDS)))

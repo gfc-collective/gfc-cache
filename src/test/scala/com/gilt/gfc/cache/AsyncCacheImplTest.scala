@@ -8,12 +8,13 @@ import com.gilt.gfc.guava.cache.CacheInitializationStrategy
 import org.mockito.Mockito._
 import org.mockito.Matchers._
 import org.mockito.ArgumentMatchers._
-import org.scalatest.mockito.MockitoSugar
-import org.scalatest.{Matchers, FunSpec}
 import com.google.common.base.Optional
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatest.funspec.AnyFunSpec
+import org.scalatest.matchers.should.Matchers
 
 
-class AsyncCacheImplTest extends FunSpec with Matchers with MockitoSugar {
+class AsyncCacheImplTest extends AnyFunSpec with Matchers with MockitoSugar {
   import scala.language.reflectiveCalls
 
   trait Fixture[K, V] {
