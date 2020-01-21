@@ -193,8 +193,9 @@ private[cache] trait DerivedAsyncCacheBase[K, V, L, W] extends AsyncCache[L, W] 
 
       cache.putIfAbsent(key, result)
 
-      result.onSuccess {
-        case Some(v) => notifyCacheMissFor(key, v)
+      result.onComplete {
+        case Success(Some(value)) => notifyCacheMissFor(key, value)
+        case _ => ()
       }
 
       result

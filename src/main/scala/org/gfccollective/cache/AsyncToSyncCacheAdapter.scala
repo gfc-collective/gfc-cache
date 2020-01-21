@@ -33,7 +33,7 @@ trait AsyncToSyncCacheAdapter[K, V] extends SyncCache[K, V] with SyncCacheEventN
   override def onCacheMissLoad(key: K, value: V): Unit = {
     cache.putIfAbsent(key, Some(value)).fold(notifyCacheReloadFor(asMap)) {
       case None => if (cache.replace(key, None, Some(value))) { notifyCacheReloadFor(asMap) }
-      case Some(v) => Unit
+      case Some(_) => ()
     }
   }
 

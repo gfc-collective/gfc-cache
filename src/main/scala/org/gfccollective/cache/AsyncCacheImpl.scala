@@ -1,7 +1,7 @@
 package org.gfccollective.cache
 
 import scala.concurrent.Future
-import scala.util.Try
+import scala.util.{Success, Try}
 import org.gfccollective.util.SingletonCache
 
 /**
@@ -63,8 +63,9 @@ trait AsyncCacheImpl[K, V] extends AsyncCache[K, V] with AsyncCacheEventNotifier
         None
     }
 
-    result.onSuccess {
-      case Some(value) => notifyCacheMissFor(key, value)
+    result.onComplete {
+      case Success(Some(value)) => notifyCacheMissFor(key, value)
+      case _ => ()
     }
 
     result
