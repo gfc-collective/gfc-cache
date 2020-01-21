@@ -1,19 +1,21 @@
 # gfc-cache [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.gfccollective/gfc-cache_2.12/badge.svg?style=plastic)](https://maven-badges.herokuapp.com/maven-central/org.gfccollective/gfc-cache_2.12) [![Build Status](https://travis-ci.org/gilt/gfc-cache.svg?branch=master)](https://travis-ci.org/gilt/gfc-cache) [![Coverage Status](https://coveralls.io/repos/gilt/gfc-cache/badge.svg?branch=master&service=github)](https://coveralls.io/github/gilt/gfc-cache?branch=master) [![Join the chat at https://gitter.im/gilt/gfc](https://badges.gitter.im/gilt/gfc.svg)](https://gitter.im/gilt/gfc?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-A library that contains scala caching helper code. Part of the [Gilt Foundation Classes](https://github.com/gilt?q=gfc).
+A library that contains scala caching helper code.
+A fork and new home of the former Gilt Foundation Classes (`com.gilt.gfc`), now called the [GFC Collective](https://github.com/gfc-collective), maintained by some of the original authors.
+
 
 ## Getting gfc-cache
 
-The latest version is 0.1.0, which is cross-built against Scala 2.10.x, 2.11.x and 2.12.x.
+The latest version is 1.0.0, which is cross-built against Scala 2.12.x and 2.13.x.
 
 If you're using SBT, add the following line to your build file:
 
 ```scala
-libraryDependencies += "org.gfccollective" %% "gfc-cache" % "0.1.0"
+libraryDependencies += "org.gfccollective" %% "gfc-cache" % "1.0.0"
 ```
 
-For Maven and other build tools, you can visit [search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Corg.gfccollective%20gfc).
-(This search will also list other available libraries from the gilt fundation classes.)
+For Maven and other build tools, you can visit [search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Corg.gfccollective).
+(This search will also list other available libraries from the GFC Collective.)
 
 ## Contents and Example Usage
 
@@ -43,6 +45,5 @@ Mix in this trait to provide configuration for the cache. The following paramete
 
 
 ## License
-Copyright 2018 Gilt Groupe, Inc. &  HBC Digital.
 
 Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
