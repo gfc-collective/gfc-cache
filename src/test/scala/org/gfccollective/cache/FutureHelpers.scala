@@ -1,4 +1,4 @@
-package com.gilt.gfc.cache
+package org.gfccollective.cache
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}

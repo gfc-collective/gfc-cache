@@ -1,4 +1,4 @@
-package com.gilt.gfc.cache
+package org.gfccollective.cache
 
 /**
   * An synchronous cache.
@@ -11,7 +11,7 @@ package com.gilt.gfc.cache
   * @since 28/Jul/2014 15:58
   */
 trait SyncCache[K, V] extends CacheBase with SyncCacheEventNotifier[K, V] {
-  import com.gilt.gfc.guava.GuavaConverters._
+  import org.gfccollective.guava.GuavaConverters._
   import com.google.common.base.Optional
 
   /**

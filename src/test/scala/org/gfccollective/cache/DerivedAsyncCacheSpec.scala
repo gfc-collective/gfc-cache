@@ -1,6 +1,6 @@
-package com.gilt.gfc.cache
+package org.gfccollective.cache
 
-import com.gilt.gfc.guava.cache.CacheInitializationStrategy
+import org.gfccollective.guava.cache.CacheInitializationStrategy
 import com.google.common.collect.{HashBiMap, BiMap}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures._

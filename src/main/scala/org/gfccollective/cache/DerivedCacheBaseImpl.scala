@@ -1,6 +1,6 @@
-package com.gilt.gfc.cache
+package org.gfccollective.cache
 
-import com.gilt.gfc.logging.Loggable
+import org.gfccollective.logging.Loggable
 
 private[cache] trait DerivedCacheBaseImpl extends CacheBase with Loggable {
   def parent: CacheBase

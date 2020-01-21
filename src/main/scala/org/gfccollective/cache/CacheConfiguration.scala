@@ -1,6 +1,6 @@
-package com.gilt.gfc.cache
+package org.gfccollective.cache
 
-import com.gilt.gfc.guava.cache.CacheInitializationStrategy
+import org.gfccollective.guava.cache.CacheInitializationStrategy
 
 /**
  * Configuration values (all are mandatory):

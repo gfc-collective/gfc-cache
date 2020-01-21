@@ -1,6 +1,6 @@
 name := "gfc-cache"
 
-organization := "com.gilt"
+organization := "org.gfccollective"
 
 scalaVersion := "2.12.10"
 
@@ -11,13 +11,14 @@ scalacOptions += "-target:jvm-1.8"
 javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
 
 libraryDependencies ++= Seq(
-  "com.gilt" %% "gfc-time" % "0.0.7",
-  "com.gilt" %% "gfc-concurrent" % "0.3.8",
-  "com.gilt" %% "gfc-logging" % "0.0.8",
-  "com.gilt" %% "gfc-util" % "0.2.2",
-  "com.gilt" %% "gfc-guava" % "0.3.1",
+  "org.gfccollective" %% "gfc-time" % "1.0.0",
+  "org.gfccollective" %% "gfc-concurrent" % "1.0.0",
+  "org.gfccollective" %% "gfc-logging" % "1.0.0",
+  "org.gfccollective" %% "gfc-util" % "1.0.0",
+  "org.gfccollective" %% "gfc-guava" % "1.0.0",
   "org.scalatest" %% "scalatest" % "3.1.0" % Test,
-  "org.mockito" % "mockito-core" % "3.2.4" % Test
+  "org.scalatestplus" %% "mockito-3-2" % "3.1.0.0" % Test,
+  "org.mockito" % "mockito-core" % "3.2.4" % Test,
 )
 
 

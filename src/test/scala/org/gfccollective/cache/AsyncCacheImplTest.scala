@@ -1,10 +1,10 @@
-package com.gilt.gfc.cache
+package org.gfccollective.cache
 
 import java.util.concurrent.{CountDownLatch, CyclicBarrier}
 import java.util.concurrent.atomic.AtomicInteger
 
 import scala.concurrent.Future
-import com.gilt.gfc.guava.cache.CacheInitializationStrategy
+import org.gfccollective.guava.cache.CacheInitializationStrategy
 import org.mockito.Mockito._
 import org.mockito.Matchers._
 import org.mockito.ArgumentMatchers._

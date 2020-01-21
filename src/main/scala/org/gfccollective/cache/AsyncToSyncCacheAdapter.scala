@@ -1,10 +1,10 @@
-package com.gilt.gfc.cache
+package org.gfccollective.cache
 
 import java.util.concurrent.ConcurrentHashMap
 import scala.collection.concurrent
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
-import com.gilt.gfc.guava.cache.CacheInitializationStrategy
+import org.gfccollective.guava.cache.CacheInitializationStrategy
 
 /**
   * Adapts an AsyncCache to the SyncCache interface. Updates to the async parent cache become visible as the values become available and cache lookups
@@ -67,7 +67,7 @@ trait AsyncToSyncCacheAdapter[K, V] extends SyncCache[K, V] with SyncCacheEventN
       if (!registered && parent != null) {
         parent.registerHandler(this)
         if (parent.isStarted) {
-          import com.gilt.gfc.concurrent.ScalaFutures.Implicits.sameThreadExecutionContext
+          import org.gfccollective.concurrent.ScalaFutures.Implicits.sameThreadExecutionContext
 
           info(s"Bootstrapping sync cache from async parent $parent")
           val bootstrap: Future[Unit] = Future.sequence(parent.asMap.map {

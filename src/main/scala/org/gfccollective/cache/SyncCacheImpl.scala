@@ -1,4 +1,4 @@
-package com.gilt.gfc.cache
+package org.gfccollective.cache
 
 /**
   * SyncCache Implementation.

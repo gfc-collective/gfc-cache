@@ -1,4 +1,4 @@
-package com.gilt.gfc.cache
+package org.gfccollective.cache
 
 /**
  * Cache base interface providing start and shutdown functions.

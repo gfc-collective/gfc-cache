@@ -1,8 +1,8 @@
-package com.gilt.gfc.cache
+package org.gfccollective.cache
 
 import scala.concurrent.Future
 import scala.util.Try
-import com.gilt.gfc.util.SingletonCache
+import org.gfccollective.util.SingletonCache
 
 /**
   * AsyncCache Implementation that in addition to a build-load function requires a load function to be implemented

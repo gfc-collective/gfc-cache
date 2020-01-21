@@ -1,12 +1,12 @@
-package com.gilt.gfc.cache
+package org.gfccollective.cache
 
 import java.util.concurrent.{Executors, ScheduledFuture, TimeUnit}
 
-import com.gilt.gfc.concurrent.AsyncScheduledExecutorService
-import com.gilt.gfc.concurrent.JavaConverters._
-import com.gilt.gfc.guava.cache.CacheInitializationStrategy
-import com.gilt.gfc.logging.Loggable
-import com.gilt.gfc.time.Timer
+import org.gfccollective.concurrent.AsyncScheduledExecutorService
+import org.gfccollective.concurrent.JavaConverters._
+import org.gfccollective.guava.cache.CacheInitializationStrategy
+import org.gfccollective.logging.Loggable
+import org.gfccollective.time.Timer
 
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, Future}

@@ -1,4 +1,4 @@
-package com.gilt.gfc.cache
+package org.gfccollective.cache
 
 import scala.concurrent.Future
 import com.google.common.util.concurrent.ListenableFuture
@@ -11,9 +11,9 @@ import com.google.common.util.concurrent.ListenableFuture
   * @since 28/Jul/2014 15:58
   */
 trait AsyncCache[K, V] extends CacheBase with AsyncCacheEventNotifier[K,V] {
-  import com.gilt.gfc.concurrent.ScalaFutures.Implicits.sameThreadExecutionContext
-  import com.gilt.gfc.guava.GuavaConverters._
-  import com.gilt.gfc.guava.future.FutureConverters._
+  import org.gfccollective.concurrent.ScalaFutures.Implicits.sameThreadExecutionContext
+  import org.gfccollective.guava.GuavaConverters._
+  import org.gfccollective.guava.future.FutureConverters._
   import com.google.common.base.Optional
 
   /**
