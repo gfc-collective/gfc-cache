@@ -20,7 +20,7 @@ libraryDependencies ++= Seq(
   "org.gfccollective" %% "gfc-guava" % "1.0.0",
   "org.scalatest" %% "scalatest" % "3.2.8" % Test,
   "org.scalatestplus" %% "mockito-3-2" % "3.1.2.0" % Test,
-  "org.mockito" % "mockito-core" % "3.9.0" % Test,
+  "org.mockito" % "mockito-core" % "3.10.0" % Test,
 )
 
 ScoverageKeys.coverageMinimum := 85.0
