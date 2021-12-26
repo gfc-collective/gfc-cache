@@ -6,7 +6,6 @@ import java.util.concurrent.atomic.AtomicInteger
 import scala.concurrent.Future
 import org.gfccollective.guava.cache.CacheInitializationStrategy
 import org.mockito.Mockito._
-import org.mockito.Matchers._
 import org.mockito.ArgumentMatchers._
 import com.google.common.base.Optional
 import org.scalatestplus.mockito.MockitoSugar
